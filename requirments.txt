@@ -1,6 +1,10 @@
-flask
-numpy
-pillow
-opencv-python-headless
-torch
-torchvision
+Flask>=2.3.0
+Werkzeug>=2.3.0
+SQLAlchemy>=1.4.0
+Flask-SQLAlchemy>=3.0
+opencv-python>=4.7.0
+numpy>=1.24.0
+razorpay>=1.3.0
+torch>=2.0.0
+torchvision>=0.15.0
+Pillow>=9.5.0
