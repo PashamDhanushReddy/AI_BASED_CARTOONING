@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container card">
+    <h2 class="section-title">Before & After</h2>
+
+<div class="preview-container">
+  <!-- Original Image -->
+  <div class="preview-card animate">
+    <h3>Original</h3>
+    <img src="{{ url_for('static_image', file_path=original_path) }}" class="img">
+  </div>
+
+  <!-- Processed Image -->
+  <div class="preview-card animate">
+    <h3>{{ style }} Result</h3>
+    <img src="{{ url_for('static_image', file_path=processed_path) }}" class="img">
+  </div>
+</div>
+
+    {% if has_subscription %}
+    <a href="{{ url_for('static_image') }}?file_path={{ processed_path }}" download class="btn btn-primary mt-4">Download High-Quality Image</a>
+    {% else %}
+    <p class="mt-4">You need an active subscription to download high-quality images.</p>
+    <a href="{{ url_for('subscriptions.plans') }}" class="btn btn-secondary">Subscribe Now</a>
+    {% endif %}
+</div>
+{% endblock %}

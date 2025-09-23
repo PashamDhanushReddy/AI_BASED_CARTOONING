@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Admin Dashboard</h1>
+<h2>All Users and Their Details</h2>
+<div class="table-responsive">
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>User ID</th><th>Username</th><th>Email</th><th>Subscription Plan</th><th>Subscription End Date</th><th>Transactions</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for data in user_data %}
+      <tr>
+        <td>{{ data.user.id }}</td>
+        <td>{{ data.user.username }}</td>
+        <td>{{ data.user.email }}</td>
+        <td>{{ data.subscription.plan if data.subscription else "No Subscription" }}</td>
+        <td>{{ data.subscription.end_date.strftime('%Y-%m-%d') if data.subscription and data.subscription.end_date else "N/A" }}</td>
+        <td>
+          <ul>
+          {% for txn in data.transactions %}
+            <li>{{ txn.transaction_id }} - {{ txn.amount }} - {{ txn.status }} - {{ txn.created_at.strftime('%Y-%m-%d') }}</li>
+          {% else %}
+            <li>No transactions</li>
+          {% endfor %}
+          </ul>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

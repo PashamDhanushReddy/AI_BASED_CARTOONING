@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card-main">
+    
+    <form id="subscription-form" class="card-form" method="POST" action="{{ url_for('subscriptions.create_subscription') }}">
+        <h3 class="gradient-text"><b>Choose Your Subscription Plan</b></h3>
+        <label for="plan">Select Plan:</label>
+        <select name="plan_key" id="plan" required>
+            <option value="" disabled selected>Select a Plan</option>
+            <option value="weekly">Weekly Plan</option>
+            <option value="monthly">Monthly Plan</option>
+            <option value="yearly">Yearly Plan</option>
+        </select>
+        <button type="submit" class="submit">Proceed to Pay</button>
+    </form>
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+document.getElementById("subscription-form").addEventListener("submit", function(e) {
+    e.preventDefault();
+    const planKey = document.getElementById("plan").value;
+    if (!planKey) {
+        alert("Please select a subscription plan.");
+        return;
+    }
+
+    fetch("{{ url_for('subscriptions.create_subscription') }}", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({plan_key: planKey})
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            alert("Error: " + data.error);
+            return;
+        }
+        const options = {
+            "key": data.razorpay_key,
+            "subscription_id": data.subscription_id,
+            "name": "🎨AI-Based Cartooning Images Subscription",
+            "description": planKey + " plan",
+            "handler": function (response){
+                fetch("{{ url_for('subscriptions.payment_success') }}", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/x-www-form-urlencoded"},
+                    body: new URLSearchParams(response)
+                }).then(() => window.location.href = "{{ url_for('dashboard.index') }}")
+            },
+            "theme": {
+                "color": "#6366f1"
+            }
+        };
+        const rzp = new Razorpay(options);
+        rzp.open();
+    })
+    .catch(error => alert("Payment initiation failed: " + error));
+});
+</script>
+{% endblock %}

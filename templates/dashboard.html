@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block content %}
+  <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 1rem;">
+
+    <h1>Dashboard</h1>
+
+    {% if not edit_mode %}
+      <div class="profile-view card" style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+        {% if user.profile_picture %}
+          <img src="{{ url_for('static', filename=user.profile_picture) }}"
+               alt="Profile Picture"
+               style="width:120px; height:120px; object-fit:cover; border-radius: 50%;">
+        {% endif %}
+        <p><strong>Username:</strong> {{ user.username }}</p>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <form method="get" action="{{ url_for('dashboard.index') }}">
+          <input type="hidden" name="edit" value="true">
+          <button type="submit" class="btn btn-primary">Edit Profile</button>
+        </form>
+      </div>
+    {% else %}
+      <form method="POST" enctype="multipart/form-data" class="card" style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; width: 300px;">
+        <label>Username</label>
+        <input type="text" name="username" value="{{ user.username }}" required><br>
+        <label>Email</label>
+        <input type="email" name="email" value="{{ user.email }}" required><br>
+        <label>Profile Picture</label>
+        <input type="file" name="profile_pic" accept="image/*"><br>
+        <button type="submit" class="btn btn-primary">Update Profile</button>
+      </form>
+      <form method="get" action="{{ url_for('dashboard.index') }}" style="margin-top: 1rem;">
+        <button type="submit" class="btn btn-secondary">Cancel</button>
+      </form>
+    {% endif %}
+
+    <hr style="width: 100%; max-width: 500px;">
+
+    <h2>Subscription Status</h2>
+    <div style="max-width: 500px;">
+      {% if subscription %}
+        <p>Plan: {{ subscription.plan }}</p>
+        <p>Ends on: {{ subscription.end_date.strftime('%Y-%m-%d') if subscription.end_date else "N/A" }}</p>
+        {% if active_subscription %}
+          <p>Your subscription is active. You can download images.</p>
+        {% else %}
+          <p>Your subscription has ended or is inactive. Please renew.</p>
+          <a href="{{ url_for('subscriptions.plans') }}" class="btn btn-secondary">Manage Subscription</a>
+        {% endif %}
+      {% else %}
+        <p>No active subscription.</p>
+        <a href="{{ url_for('subscriptions.plans') }}" class="btn btn-primary">Subscribe Now</a>
+      {% endif %}
+    </div>
+
+    <hr style="width: 100%; max-width: 500px;">
+
+    <h2>Your Transactions</h2>
+    <ul style="list-style-type: none; padding-left: 0; max-width: 500px;">
+      {% for txn in transactions %}
+        <li>{{ txn.transaction_id }} - {{ txn.amount }} - {{ txn.status }} - {{ txn.created_at.strftime('%Y-%m-%d') }}</li>
+      {% else %}
+        <li>No transactions found.</li>
+      {% endfor %}
+    </ul>
+
+  </div>
+{% endblock %}

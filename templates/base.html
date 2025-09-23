@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- Base metadata -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- SEO (override per page via blocks if needed) -->
+  <title>{% block title %}AI-Based Cartooning Images{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}Convert your photos into cartoon, sketch, and pencil-color styles with Toonify.{% endblock %}">
+  <meta name="theme-color" content="#6c5ce7">
+
+  <!-- Open Graph / Social -->
+  <meta property="og:title" content="{% block og_title %}Toonify — Cartoonize Your Photos{% endblock %}">
+  <meta property="og:description" content="{% block og_description %}Upload, preview side-by-side, and download stunning cartoonized images.{% endblock %}">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="{{ request.url_root | trim('/') }}">
+  <meta property="og:image" content="{{ url_for('static', filename='css/og-image.png', _external=True) }}">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=dehaze" />
+
+  <!-- Favicon (add your icons to static) -->
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+
+  <!-- Styles -->
+  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+
+  <style>
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+body {
+  background-image: url("{{ url_for('static', filename='images/princes.png') }}");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+}
+  </style>
+
+  {% block head_extra %}{% endblock %}
+</head>
+<body>
+  <!-- Debug: show username -->
+  <p style="position:fixed;top:0;right:0;background:black;color:white;padding:2px 8px;z-index:1000;">
+    Logged in as: {{ session.get('username') }}
+  </p>
+  
+  <!-- Header / Navigation -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="{{ url_for('index') }}" class="brand" aria-label="Toonify Home">
+        <span class="brand-mark" aria-hidden="true">🎨</span>
+        <span class="brand-text">AI-Based Cartooning Images</span>
+      </a>
+
+      <!-- Mobile nav toggle -->
+      <button id="navToggle" class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="primary-nav">
+        <span class="material-symbols-outlined">dehaze</span>
+      </button>
+
+      <nav id="primary-nav" class="nav" aria-label="Primary">
+        <ul class="nav-list">
+          {% if session.get('user_id') %}
+            {% if session.get('username') == 'admin' %}
+
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('dashboard.index') }}">Dashboard</a>
+              </li>
+              <li class="nav-item">
+                <button id="themeToggle" class="nav-link" aria-label="Toggle dark mode">🌙</button>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
+              </li>
+            {% else %}
+              
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('index') }}">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('dashboard.index') }}">Dashboard</a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ url_for('subscriptions.plans') }}" class="nav-link">Subscribe</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
+              </li>
+              <li class="nav-item">
+                <button id="themeToggle" class="nav-link" aria-label="Toggle dark mode">🌙</button>
+              </li>
+            {% endif %}
+          {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('index') }}">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('auth.login') }}">Login</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('auth.register') }}">Create Account</a>
+            </li>
+            <li class="nav-item">
+              <button id="themeToggle" class="nav-link" aria-label="Toggle dark mode">🌙</button>
+            </li>
+          {% endif %}
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Optional: Breadcrumbs -->
+  {% block breadcrumbs %}{% endblock %}
+
+  <!-- Flash messages -->
+  <div class="flash-container" aria-live="polite" aria-atomic="true">
+    <div class="container">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="toast toast-{{ category|lower }}">
+              <div class="toast-content">
+                <span class="toast-message">{{ message }}</span>
+                <button type="button" class="toast-close" aria-label="Dismiss">&times;</button>
+              </div>
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <main id="main-content" class="site-main">
+    <div class="container">
+      {% block content %}{% endblock %}
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-left">
+        <a href="{{ url_for('index') }}" class="brand brand-footer">
+          <span class="brand-mark" aria-hidden="true">🎨</span>
+          <span class="brand-text">AI-Based Cartooning Images</span>
+        </a>
+        <p class="muted">Turn photos into cartoons in seconds.</p>
+      </div>
+      <div class="footer-right">
+        <nav aria-label="Footer">
+          <ul class="footer-links">
+            <li><a href="{{ url_for('index') }}">Home</a></li>
+            {% if not session.get('username') %}
+              <li><a href="{{ url_for('auth.login') }}">Login</a></li>
+              <li><a href="{{ url_for('auth.register') }}">Register</a></li>
+            {% else %}
+              <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
+            {% endif %}
+          </ul>
+        </nav>
+        <p class="copyright">
+          © {{ now().year if now is defined else 2025 }} AI-Based Cartooning Images. All rights reserved.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JS Scripts -->
+  <script>
+    (function() {
+      const toggle = document.getElementById('navToggle');
+      const nav = document.getElementById('primary-nav');
+      if (!toggle || !nav) return;
+      toggle.addEventListener('click', () => {
+        const expanded = toggle.getAttribute('aria-expanded') === 'true';
+        toggle.setAttribute('aria-expanded', String(!expanded));
+        nav.classList.toggle('open');
+      });
+    })();
+
+    (function() {
+      const toasts = document.querySelectorAll('.toast');
+      toasts.forEach(t => {
+        const btn = t.querySelector('.toast-close');
+        if (btn) btn.addEventListener('click', () => t.remove());
+        setTimeout(() => { if (t.parentNode) t.remove(); }, 4000);
+      });
+    })();
+
+    (function() {
+      const toggle = document.getElementById('themeToggle');
+      const body = document.body;
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      if (savedTheme === 'dark') {
+        body.setAttribute('data-theme', 'dark');
+        toggle.textContent = '☀️';
+      }
+      toggle.addEventListener('click', () => {
+        if (body.getAttribute('data-theme') === 'dark') {
+          body.removeAttribute('data-theme');
+          localStorage.setItem('theme', 'light');
+          toggle.textContent = '🌙';
+        } else {
+          body.setAttribute('data-theme', 'dark');
+          localStorage.setItem('theme', 'dark');
+          toggle.textContent = '☀️';
+        }
+      });
+    })();
+
+    window.addEventListener('scroll', () => {
+      const header = document.querySelector('.site-header');
+      if(window.scrollY > 20) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+  </script>
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>

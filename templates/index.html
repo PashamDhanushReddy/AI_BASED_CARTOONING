@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="hero">
+ <h1>Transform your images into stunning cartoons</h1>
+ <p>Upload an image, pick a style, preview side-by-side, and download after payment.</p>
+
+ <form method="POST" enctype="multipart/form-data" class="card">
+   <label>Upload Image (PNG/JPG/JPEG)</label>
+   <input type="file" name="image" id="fileInput" accept=".png,.jpg,.jpeg" required class="file-input" Hidden>
+   <label for="fileInput" class="file-button">Upload Image</label>
+
+   <label>Select Style</label>
+   <select name="style" required>
+     <option value="">-- Select --</option>
+     <option>Classic Cartoon</option>
+     <option>Sketch</option>
+     <option>Pencil Color</option>
+     <option>Anime - Paprika</option>
+     <option>Anime - FacePaint v1</option>
+     <option>Anime - FacePaint v2</option>
+   </select>
+
+   <button type="submit" class="submit-button">Process</button>
+ </form>
+</div>
+
+<hr>
+
+
+<h2>Before & After Preview</h2>
+<div class="preview-container">
+  <div class="preview-card">
+    <h3>Original</h3>
+    <img src="{{ url_for('static', filename='images/org.jpg') }}" alt="Original Image">
+  </div>
+  <div class="preview-card">
+    <h3>Cartoonized</h3>
+    <img src="{{ url_for('static', filename='images/mod.png') }}" alt="Cartoonized Image">
+  </div>
+</div>
+<hr>
+
+<h2>Sample Cartoon Styles</h2>
+  <div class="sample-gallery">
+    <div class="sample-card">
+      <img src="{{ url_for('static', filename='images/dogcartoon.png') }}" alt="Classic Cartoon">
+      <p>Classic Cartoon</p>
+    </div>
+    <div class="sample-card">
+      <img src="{{ url_for('static', filename='images/cartoonized_sketch_20250823_192432.png') }}" alt="Sketch">
+      <p>Sketch</p>
+    </div>
+    <div class="sample-card">
+      <img src="{{ url_for('static', filename='images/changed.png') }}" alt="Pencil Color">
+      <p>Pencil Color</p>
+    </div>
+  </div>
+<hr>
+
+
+<script>
+  // JS to trigger animation when element enters viewport
+const animateElements = document.querySelectorAll('.animate');
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('active');
+      observer.unobserve(entry.target); // Animate once
+    }
+  });
+}, { threshold: 0.2 });
+
+animateElements.forEach(el => observer.observe(el));
+</script>
+
+
+{% endblock %}
