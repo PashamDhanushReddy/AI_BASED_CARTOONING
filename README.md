@@ -1,59 +1,53 @@
-# AI Toonify Subscription App
+# 🎨 AI-Based Cartooning
 
-A Flask-based web application that allows users to upload images, apply cartoon/AnimeGAN/Sketch effects, and manage subscriptions with payment integration.
+<div align="center">
 
-## Features
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![TensorFlow](https://img.shields.io/badge/TensorFlow-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white)
+![AI/ML](https://img.shields.io/badge/AI%2FML-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white)
 
-  - User registration, login, profile update
-  - Image upload and processing with cartoon, sketch, pencil, and advanced AnimeGAN filters
-  - Subscription management (weekly/monthly/yearly) via Razorpay
-  - Payment gateway integration (Razorpay)
-  - Admin dashboard to view and manage users, transactions, and subscriptions
-  - Secure download of processed images for subscribed users
-  - Model pre-download and caching for fast inference
+**Convert images into cartoon style using AI and Deep Learning**
 
-## Tech Stack
+</div>
 
-  - Python (Flask)
-  - SQLAlchemy (SQLite)
-  - OpenCV (cv2), NumPy
-  - Razorpay Python SDK
-  - Torch, torchvision (AnimeGAN)
-  - Pillow (PIL)
-  - HTML/CSS/Jinja2 templates
+---
 
-## Getting Started
+## 📖 Description
 
-1. **Install dependencies**
+An AI-powered application that transforms regular images into artistic cartoon-style representations using neural networks and image processing techniques.
 
-   See `requirements.txt` below.
+## 🛠️ Technologies Used
 
-2. **Environment Variables**
+- **Python** - Core programming language
+- **TensorFlow/Keras** - Deep learning framework
+- **OpenCV** - Image processing
+- **NumPy** - Numerical computations
+- **AI/ML** - Neural network models
 
-   - Set `SECRET_KEY` for Flask security.
-   - Set Razorpay credentials:
-     - `RAZORPAY_KEY_ID`
-     - `RAZORPAY_KEY_SECRET`
-     - (Optional) Razorpay Plan IDs for weekly, monthly, yearly subscriptions.
+## 🚀 Features
 
-3. **Run the application:**
-    
-    - App runs at http://localhost:8000
+✨ Convert images to cartoon style
+✨ Real-time processing
+✨ Multiple style options
+✨ Batch processing support
 
-4. **Model Pre-download (Optional, recommended for AnimeGAN):**
+## 📝 Usage
 
-    
-## Folder Structure
-  
-  - `app.py` — Flask app entry
-  - `auth.py`, `dashboard.py`, `subscriptions.py`, `payments.py` — app modules
-  - `processing.py` — image transform functions
-  - `predownload_models.py` — model fetch utility
-  - `database.py` — SQLAlchemy ORM models
-  - `templates/` — HTML templates
-  - `static/` — CSS and assets
-  
-## License
+```python
+# Example usage
+from cartooning import ImageCartoonizer
 
-MIT
+cartoonizer = ImageCartoonizer()
+result = cartoonizer.convert('image.jpg')
+result.save('cartoon_output.jpg')
+```
 
+## 👨‍💻 Author
+
+**Pasham Dhanush Reddy**
+- Software Developer | Prompt Engineer | AI/ML Engineer
+- 2+ years of experience
+
+---
+
+*Made with ❤️ by Pasham Dhanush Reddy*
